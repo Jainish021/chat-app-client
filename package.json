@@ -1,0 +1,30 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:3001",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
+    "autoprefixer": "^10.4.16",
+    "eslint": "8.46.0",
+    "eslint-config-next": "13.4.13",
+    "next": "13.4.13",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-redux": "^8.1.2",
+    "socket.io-client": "^4.7.2",
+    "swr": "^2.2.1",
+    "tailwindcss": "^3.3.3",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "http-proxy-middleware": "^2.0.6",
+    "postcss": "^8.4.27"
+  }
+}
