@@ -5,7 +5,7 @@ const nextConfig = {
             {
                 source: '/:path*',
                 // destination: 'http://localhost:3001/:path*' // Proxy to Backend
-                destination: '/:path*' // Proxy to Backend
+                destination: 'https://howdy-server.up.railway.app/:path*' // Proxy to Backend
             }
         ]
     }
