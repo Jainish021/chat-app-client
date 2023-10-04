@@ -169,7 +169,7 @@ export default function Chatbox() {
         return (
             <div className='flex flex-row px-[5%] py-[1%] bg-gray-700 text-slate-300 cursor-pointer'>
                 <Image
-                    src={selectedItem.avatar ? `data:image/png;base64, ${selectedItem.avatar}` : ""}
+                    src={selectedItem.avatar ? `data:image/png;base64, ${selectedItem.avatar}` : '/userImage.png'}
                     width={40}
                     height={40}
                     alt=''
