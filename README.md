@@ -1,7 +1,9 @@
 # Howdy
 > Link to the application: https://howdy.up.railway.app/<br>
-> Server Github repo: https://github.com/Jainish021/chat-app-server<br><br>
-
+> Server Github repo: https://github.com/Jainish021/chat-app-server<br>
+<br>
+![Screenshot of login page](https://github.com/Jainish021/images/blob/main/chat-app-login.png)
+<br>
 This is a dynamic chat application that I designed and developed to showcase my proficiency in cutting-edge web development technologies. This application brings together a powerful combination of frontend and backend technologies, offering users a seamless, interactive, and secure chatting experience. I leveraged Next.js, Redux, and Tailwind CSS for the frontend, while harnessing Node.js, Express.js, and MongoDB for the robust backend infrastructure.<br>
 
 ## Key Features:<br>
