@@ -61,11 +61,11 @@ export default function FriendSearch(props) {
                 onClick={() => addUser(listItem._id)}
             >
                 <Image
-                    src={listItem.avatar || '/userImage.png'}
+                    src={listItem.avatar ? `data:image/png;base64, ${listItem.avatar}` : '/userImage.png'}
                     width={40}
                     height={30}
                     alt=''
-                    className='rounded-full bg-white m-[2%] w-auto h-auto'
+                    className='rounded-full bg-white m-[2%] w-[10%] h-[10%]'
                     loading="lazy"
                 ></Image >
                 <div className='m-[1%]'>

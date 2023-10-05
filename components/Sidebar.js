@@ -54,7 +54,7 @@ export default function Sidebar() {
         return (
             <div className="flex flex-col min-h-[calc(100vh-120px)] items-center text-slate-300">
                 <p
-                    className='w-[30%] p-[5%] my-auto text-center align-middle bg-violet-700 rounded-lg transition-transform transform hover:scale-110 focus:outline-none active:scale-100'
+                    className='w-[30%] p-[5%] my-auto text-center align-middle bg-violet-700 rounded-lg transition-transform transform hover:scale-110 focus:outline-none active:scale-100 cursor-pointer'
                     onClick={friendSearch}
                 >Add Friends</p>
             </div>
@@ -80,7 +80,7 @@ export default function Sidebar() {
                     width={40}
                     height={30}
                     alt=''
-                    className='rounded-full bg-white m-[2%]'
+                    className='rounded-full bg-white m-[2%] w-[10%] h-[10%]'
                     loading="lazy"
                 ></Image >
                 <div className='text-xl mx-[10%] my-auto'>
