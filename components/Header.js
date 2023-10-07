@@ -13,10 +13,11 @@ export default function Header(props) {
         setAvatar(userInformation.avatar ? `data:image/png;base64, ${userInformation.avatar}` : "")
     }, [userInformation])
 
-    function Menu() {
+
+    function Menu(e) {
+        e.stopPropagation()
         setVisibility(prev => !prev)
     }
-
 
     function LogOut() {
         localStorage.removeItem("token")
@@ -27,6 +28,7 @@ export default function Header(props) {
         <>
             <div
                 className='flex flex-row items-center justify-between px-[10%] py-[3%] h-[10%] border-b border-slate-600'
+                onClick={() => setVisibility(false)}
             >
                 <Image
                     src={avatar || '/userImage.png'}
@@ -44,13 +46,13 @@ export default function Header(props) {
                     >&#x002B;</p>
                     <div className='relative'>
                         <span
-                            onClick={Menu}
+                            onClick={(e) => Menu(e)}
                             className='w-10 mx-[2%] px-[2%] text-center cursor-pointer'
                         >&#x22EE;
                         </span>
                         {visibility &&
                             <div className='absolute my-2 bg-gray-900 block text-slate-300 right-0 z-1 w-fit text-lg'>
-                                {/* <p className='hover:bg-violet-700  px-3 py-1'>Settings</p> */}
+                                <p className='hover:bg-violet-700  px-3 py-1' onClick={props.profile}>Settings</p>
                                 <p className='hover:bg-violet-700  px-3 py-1' onClick={LogOut}>Logout</p>
                             </div>
                         }

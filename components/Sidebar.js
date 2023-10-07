@@ -95,31 +95,26 @@ export default function Sidebar() {
     }
 
     return (
-        <>
-            {
-                friendSearchVisibility ?
-                    <FriendSearch
-                        friendSearch={friendSearch}
-                        setFriendSearchVisibility={setFriendSearchVisibility}
-                    />
-                    :
-                    profileVisibility
-                        ?
-                        <>
-                            <Profile
-                                profile={profile}
-                            />
-                        </>
-                        :
-                        <>
-                            <Header
-                                friendSearch={friendSearch}
-                                profile={profile}
-                            />
-                            {list.length > 0 ? <Friends /> : <AddFriend />}
-                        </>
+        <div className='relative'>
+            <div className={((friendSearchVisibility || profileVisibility) && 'absolute duration-300 ease-out transition-all top-0 right-0 translate-x-full z-0 opacity-0') || 'duration-300 left-0 bottom-0 ease-in transition-all'}>
+                <Header
+                    friendSearch={friendSearch}
+                    profile={profile}
+                />
+                {list.length > 0 ? <Friends /> : <AddFriend />}
+            </div>
 
-            }
-        </>
+            <div className={friendSearchVisibility ? 'duration-300 ease-in transition-all' : 'absolute duration-300 ease-out transition-all right-0 top-0 translate-x-full z-0 opacity-0'}>
+                <FriendSearch
+                    friendSearch={friendSearch}
+                    setFriendSearchVisibility={setFriendSearchVisibility}
+                />
+            </div>
+            <div className={profileVisibility ? 'duration-300 ease-in transition-all' : 'absolute duration-300 ease-out transition-all right-0 top-0 translate-x-full z-0 opacity-0'}>
+                <Profile
+                    profile={profile}
+                />
+            </div>
+        </div>
     )
 }

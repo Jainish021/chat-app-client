@@ -64,7 +64,7 @@ export default function Chat() {
                                 <div className='w-1/4 bg-gray-700 min-h-[calc(100vh-40px)]'>
                                     <Sidebar />
                                 </div>
-                                <div className='float-left w-3/4 bg-gray-800 min-h-[calc(100vh-40px)]'>
+                                <div className='float-left w-3/4 bg-gray-800 min-h-[calc(100vh-40px)] z-10'>
                                     <Chatbox />
                                 </div>
                             </div>
