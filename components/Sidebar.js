@@ -6,12 +6,14 @@ import axios from "axios"
 import Header from "./Header"
 import FriendSearch from './FriendSearch'
 import Profile from './Profile'
+import FriendProfile from './FriendProfile'
 import { setSelectedItem } from '../slices/selectedItemSlice'
 
 export default function Sidebar() {
     const router = useRouter()
     const dispatch = useDispatch()
     const selectedItem = useSelector((state) => state.selectedItem)
+    const friendProfileVisibility = useSelector((state) => state.friendProfileVisibility)
     const [friendSearchVisibility, setFriendSearchVisibility] = useState(false)
     const [profileVisibility, setProfileVisibility] = useState(false)
     const [list, setList] = useState([])
@@ -93,10 +95,11 @@ export default function Sidebar() {
             friendsList
         )
     }
+    console.log(friendProfileVisibility)
 
     return (
         <div className='relative'>
-            <div className={((friendSearchVisibility || profileVisibility) && 'absolute duration-300 ease-out transition-all top-0 right-0 translate-x-full z-0 opacity-0') || 'duration-300 left-0 bottom-0 ease-in transition-all'}>
+            <div className={((friendSearchVisibility || profileVisibility || friendProfileVisibility.isVisible) && 'absolute duration-300 ease-out transition-all top-0 right-0 translate-x-full z-0 opacity-0') || 'duration-300 left-0 bottom-0 ease-in transition-all'}>
                 <Header
                     friendSearch={friendSearch}
                     profile={profile}
@@ -104,15 +107,20 @@ export default function Sidebar() {
                 {list.length > 0 ? <Friends /> : <AddFriend />}
             </div>
 
-            <div className={friendSearchVisibility ? 'duration-300 ease-in transition-all' : 'absolute duration-300 ease-out transition-all right-0 top-0 translate-x-full z-0 opacity-0'}>
+            <div className={!friendProfileVisibility.isVisible && friendSearchVisibility ? 'duration-300 ease-in transition-all' : 'absolute duration-300 ease-out transition-all right-0 top-0 translate-x-full z-0 opacity-0'}>
                 <FriendSearch
                     friendSearch={friendSearch}
                     setFriendSearchVisibility={setFriendSearchVisibility}
                 />
             </div>
-            <div className={profileVisibility ? 'duration-300 ease-in transition-all' : 'absolute duration-300 ease-out transition-all right-0 top-0 translate-x-full z-0 opacity-0'}>
+            <div className={!friendProfileVisibility.isVisible && profileVisibility ? 'duration-300 ease-in transition-all' : 'absolute duration-300 ease-out transition-all right-0 top-0 translate-x-full z-0 opacity-0'}>
                 <Profile
                     profile={profile}
+                />
+            </div>
+            <div className={friendProfileVisibility.isVisible ? 'duration-300 ease-in transition-all' : 'absolute duration-300 ease-out transition-all right-0 top-0 translate-x-full z-0 opacity-0'}>
+                <FriendProfile
+                    selectedItem={selectedItem}
                 />
             </div>
         </div>

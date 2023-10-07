@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import sharedDataReducer from '../slices/sharedDataSlice'
+import friendProfileVisibilityReducer from '../slices/friendProfileVisibilitySlice'
 import selectedItemReducer from '../slices/selectedItemSlice'
 import userInformationReducer from '../slices/userInformationSlice'
 
 const store = configureStore({
     reducer: {
-        sharedData: sharedDataReducer,
+        friendProfileVisibility: friendProfileVisibilityReducer,
         selectedItem: selectedItemReducer,
         userInformation: userInformationReducer,
     },

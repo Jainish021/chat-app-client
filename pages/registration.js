@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from "react"
 import { useDispatch } from 'react-redux'
-import { setSharedData } from '../slices/sharedDataSlice'
+import { setUserInformation } from '../slices/userInformationSlice'
 import axios from "axios"
 import Loading from "../components/Loading"
 import HeadComponent from '../components/HeadComponent'
@@ -27,7 +27,7 @@ export default function Registration() {
         const fetchUser = async () => {
             try {
                 const userDetails = await axios.get("/users/me").then(res => res.data)
-                dispatch(setSharedData(userDetails))
+                dispatch(setUserInformation(userDetails))
                 router.push("/chat")
             } catch (e) {
                 setIsLoading(false)
@@ -81,7 +81,7 @@ export default function Registration() {
                 throw new Error()
             }
             setErrorLabel("")
-            dispatch(setSharedData(userDetails.user))
+            dispatch(setUserInformation(userDetails.user))
             router.push('/chat')
         } catch (e) {
             setErrorLabel("User already exists! Try logging in.")

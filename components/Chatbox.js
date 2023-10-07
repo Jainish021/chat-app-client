@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import { useEffect, useState, useRef } from 'react'
 import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { setFriendProfileVisibility } from '../slices/friendProfileVisibilitySlice'
 import axios from 'axios'
 import Title from '../components/Title'
 import { v4 } from 'uuid'
@@ -8,6 +10,7 @@ import { v4 } from 'uuid'
 
 export default function Chatbox() {
     const selectedItem = useSelector((state) => state.selectedItem)
+    const dispatch = useDispatch()
     const [initState, setInitState] = useState(true)
     const [errorLabel, setErrorLabel] = useState("")
     const [newMessage, setNewMessage] = useState("")
@@ -167,7 +170,10 @@ export default function Chatbox() {
 
     function ChatBoxHeader() {
         return (
-            <div className='flex flex-row px-[5%] py-[1%] bg-gray-700 text-slate-300 cursor-pointer'>
+            <div
+                className='flex flex-row px-[5%] py-[1%] bg-gray-700 text-slate-300 cursor-pointer'
+                onClick={() => dispatch(setFriendProfileVisibility({ isVisible: true }))}
+            >
                 <Image
                     src={selectedItem.avatar ? `data:image/png;base64, ${selectedItem.avatar}` : '/userImage.png'}
                     width={40}
