@@ -7,7 +7,7 @@ import { setUserInformation } from '../slices/userInformationSlice'
 import Title from '../components/Title'
 import HeadComponent from '../components/HeadComponent'
 
-export default function forgotPassword() {
+export default function ForgotPassword() {
     const router = useRouter()
     const dispatch = useDispatch()
     const [errorLabel, setErrorLabel] = useState("")
@@ -31,7 +31,7 @@ export default function forgotPassword() {
     async function processRequest(e) {
         e.preventDefault()
         try {
-            await axios.post("users/forgotPassword", { "email": formData.email }).then(res => res.data)
+            await axios.post("/users/forgotPassword", { "email": formData.email }).then(res => res.data)
             setErrorLabel("")
             setRequestStatus(true)
         } catch (e) {
