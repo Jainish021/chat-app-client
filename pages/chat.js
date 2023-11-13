@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import axios from "axios"
 import { useDispatch } from 'react-redux'
 import { setUserInformation } from '../slices/userInformationSlice'
+import { setSocket } from '../slices/socketSlice'
 import io from 'socket.io-client'
 import Loading from "../components/Loading"
 import Sidebar from '../components/Sidebar'
@@ -14,14 +15,35 @@ import HeadComponent from '../components/HeadComponent'
 export default function Chat() {
     const router = useRouter()
     const dispatch = useDispatch()
-    // const socket = io.connect(process.env.PORT || ':3001')
-    // socket.on('message', (data) => {
-    //     console.log('Received message from server:', data);
-    // })
-    // socket.emit('message')
+    const socketInformation = useSelector((state) => state.socketInformation)
     const userInformation = useSelector((state) => state.userInformation)
     const [userInfo, setUserInfo] = useState(userInformation)
     const [isLoading, setIsLoading] = useState(true)
+    // const socket = io(process.env.DESTINATION)
+    // socket.on('connection', () => {
+    //     console.log('Connected to the server');
+    // })
+    // console.log(socket)
+    function createSocket() {
+        const socket = io()
+        socket.on("connect", () => {
+            console.log(socket.id); // ojIckSD2jqNzOqIrAGzL
+        })
+        // socket.emit('message', "Hello")
+        // console.log("here")
+        // dispatch(setSocket(socket))
+    }
+
+    useEffect(() => {
+        // // socket.on('message', (data) => {
+        // //     console.log('Received message from server:', data);
+        // // })
+        // socket.on('connection', () => {
+        //     console.log('Connected to the server');
+        // })
+        // socket.emit('message', "Hello")
+        !socketInformation && createSocket()
+    }, [socketInformation])
 
     useEffect(() => {
         const token = localStorage.getItem('token')

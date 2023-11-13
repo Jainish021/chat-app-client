@@ -93,7 +93,7 @@ export default function Login() {
                                                 <input type="password" name="password" id="password" value={formData.password} placeholder="••••••••" className="border border-gray-300 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-[2.5%] bg-gray-800 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500" required={true} onChange={(e) => handleChange(e)} />
                                             </div>
                                             <div className="flex items-center justify-between">
-                                                <a href="#" className="text-sm font-medium text-primary-600 hover:underline text-primary-500">Forgot password?</a>
+                                                <Link href={'/forgotPassword'} className="text-sm font-medium text-primary-600 hover:underline text-primary-500">Forgot password?</Link>
                                             </div>
                                             <div className='text-amber-400'>
                                                 {errorLabel}

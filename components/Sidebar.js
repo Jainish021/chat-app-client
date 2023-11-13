@@ -95,7 +95,6 @@ export default function Sidebar() {
             friendsList
         )
     }
-    console.log(friendProfileVisibility)
 
     return (
         <div className='relative'>
