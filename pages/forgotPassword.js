@@ -1,15 +1,11 @@
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { useState } from 'react'
 import axios from 'axios'
-import { useDispatch } from 'react-redux'
-import { setUserInformation } from '../slices/userInformationSlice'
 import Title from '../components/Title'
 import HeadComponent from '../components/HeadComponent'
 
 export default function ForgotPassword() {
     const router = useRouter()
-    const dispatch = useDispatch()
     const [errorLabel, setErrorLabel] = useState("")
     const [formData, setFormData] = useState({
         email: "",

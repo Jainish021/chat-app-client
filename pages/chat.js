@@ -1,8 +1,7 @@
 import { useRouter } from 'next/router'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react'
 import axios from "axios"
-import { useDispatch } from 'react-redux'
 import { setUserInformation } from '../slices/userInformationSlice'
 import { setSocket } from '../slices/socketSlice'
 import io from 'socket.io-client'

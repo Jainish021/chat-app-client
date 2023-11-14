@@ -76,13 +76,12 @@ export default function Registration() {
 
         try {
             const userDetails = await axios.post("/users", formData).then(res => res.data)
-            localStorage.setItem("token", userDetails.token)
             if (userDetails.error) {
                 throw new Error()
             }
             setErrorLabel("")
             dispatch(setUserInformation(userDetails.user))
-            router.push('/chat')
+            router.push('/verification')
         } catch (e) {
             setErrorLabel("User already exists! Try logging in.")
         }

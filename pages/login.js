@@ -56,15 +56,18 @@ export default function Login() {
         }
         try {
             const userDetails = await axios.post("/users/login", formData).then(res => res.data)
-            localStorage.setItem("token", userDetails.token)
-            setErrorLabel("")
             dispatch(setUserInformation(userDetails.user))
-            router.push('/chat')
+            if (userDetails.user.verified) {
+                localStorage.setItem("token", userDetails.token)
+                setErrorLabel("")
+                router.push('/chat')
+            } else {
+                router.push('/verification')
+            }
         } catch (e) {
             setErrorLabel("Unable to login. Enter correct Email-Password.")
         }
     }
-
 
     return (
         <>
