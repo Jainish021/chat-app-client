@@ -1,22 +1,47 @@
 import Image from 'next/image'
 import { useEffect, useState, useRef } from 'react'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { setFriendProfileVisibility } from '../slices/friendProfileVisibilitySlice'
 import axios from 'axios'
 import Title from '../components/Title'
 import { v4 } from 'uuid'
+import io from 'socket.io-client'
 
 
 export default function Chatbox() {
-    const selectedItem = useSelector((state) => state.selectedItem)
     const dispatch = useDispatch()
+    const selectedItem = useSelector((state) => state.selectedItem)
     const [initState, setInitState] = useState(true)
     const [errorLabel, setErrorLabel] = useState("")
     const [newMessage, setNewMessage] = useState("")
+    const [socket, setSocket] = useState(false)
     const [messages, setMessages] = useState([])
     const scrollableElementRef = useRef(null)
 
+    function createSocket() {
+        const socketInfo = io.connect(process.env.NEXT_PUBLIC_DESTINATION, {
+            query: {
+                token: localStorage.getItem('token'),
+            },
+        })
+        setSocket(socketInfo)
+        socketInfo.emit('message', "Hello")
+    }
+
+    useEffect(() => {
+        !socket && createSocket()
+    }, [])
+
+    function listenMessages() {
+        socket.on('message', (data) => {
+            data = JSON.parse(data)
+            setMessages(prevMessages => [...prevMessages, data])
+        })
+    }
+
+    useEffect(() => {
+        socket && listenMessages()
+    }, [socket])
 
     useEffect(() => {
         if (selectedItem?._id) {

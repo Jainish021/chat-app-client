@@ -4,7 +4,7 @@ const nextConfig = {
         return [
             {
                 source: '/:path*',
-                destination: process.env.DESTINATION + '/:path*' // Proxy to Backend
+                destination: process.env.NEXT_PUBLIC_DESTINATION + '/:path*' // Proxy to Backend
             }
         ]
     }
