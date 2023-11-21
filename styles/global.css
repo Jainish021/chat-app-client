@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgb(31, 41, 55);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(55, 65, 81);
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(203, 213, 225);
+}
+
+.EmojiPickerReact.epr-dark-theme {
+    background-color: rgb(55, 65, 81);
+}
+
+.EmojiPickerReact .epr-search-container input.epr-search {
+    --epr-search-input-bg-color: rgb(31, 41, 55);
+    --epr-search-input-bg-color-active: rgb(17, 24, 39);
+}
+
+.EmojiPickerReact li.epr-emoji-category>.epr-emoji-category-label {
+    --epr-category-label-bg-color: rgb(17, 24, 39, 90%);
+
+}

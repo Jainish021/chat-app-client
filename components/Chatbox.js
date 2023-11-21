@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setFriendProfileVisibility } from '../slices/friendProfileVisibilitySlice'
 import axios from 'axios'
+import EmojiPicker from 'emoji-picker-react'
 import Title from '../components/Title'
 import { v4 } from 'uuid'
 import io from 'socket.io-client'
@@ -16,6 +17,8 @@ export default function Chatbox() {
     const [newMessage, setNewMessage] = useState("")
     const [socket, setSocket] = useState(false)
     const [messages, setMessages] = useState([])
+    const [emojiPicker, setEmojiPicker] = useState(false)
+    const [scrollButton, setScrollButton] = useState(false)
     const scrollableElementRef = useRef(null)
 
     function createSocket() {
@@ -63,6 +66,10 @@ export default function Chatbox() {
         if (scrollableElementRef.current) {
             scrollableElementRef.current.scrollTop = scrollableElementRef.current.scrollHeight
         }
+    }
+
+    function displayScrollToBottomButton() {
+        scrollableElementRef.current && scrollableElementRef.current.scrollHeight - scrollableElementRef.current.scrollTop > 800 ? setScrollButton(true) : setScrollButton(false)
     }
 
 
@@ -214,18 +221,52 @@ export default function Chatbox() {
         )
     }
 
+    function addEmoji(e) {
+        setEmojiPicker(false)
+        setNewMessage(prevValue => prevValue + e.emoji)
+    }
 
     function InputBox() {
         return (
-            <form onSubmit={(e) => postMessage(e)}>
+            <form className='relative flex bg-gray-800 ' onSubmit={(e) => postMessage(e)}>
+                <Image
+                    src={'/emoji_icon.png'}
+                    width={20}
+                    height={20}
+                    alt=''
+                    className='cursor-pointer bg-gray-900 rounded h-fit w-fit ml-[2%] mt-[0.5%] p-[0.6%]'
+                    priority="high"
+                    onClick={() => setEmojiPicker(prevValue => !prevValue)}
+                ></Image >
+                {
+                    emojiPicker
+                    &&
+                    <div className='absolute bottom-0'>
+                        <EmojiPicker theme='dark' onEmojiClick={(e) => addEmoji(e)} />
+                    </div>
+                }
                 <input
                     type='text'
-                    className='flex h-[10%] w-[90%] mx-[5%] mb-[2%] py-[0.4%] px-[1%] justify-self-end bg-gray-700 rounded outline-0 text-slate-300'
+                    className='flex h-12 w-[80%] ml-[2%] mr-[5%] my-[0.5%] py-[0.4%] px-[1%] justify-self-end bg-gray-900 rounded outline-0 text-slate-300'
                     placeholder='Type a message'
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     autoFocus
                 />
+
+                {
+                    scrollButton
+                    &&
+                    <Image
+                        src={'/down-arrow.svg'}
+                        width={10}
+                        height={10}
+                        alt=''
+                        className='cursor-pointer bg-gray-900 rounded-full w-10 h-10 ml-[2%] mt-[0.5%] p-[0.6%]'
+                        priority="high"
+                        onClick={scrollToBottom}
+                    ></Image >
+                }
             </form>
         )
     }
@@ -243,10 +284,15 @@ export default function Chatbox() {
                     ) :
                     (
                         <div className='min-h-[calc(100vh-40px)]'>
-                            <div className='h-[10%]'>
+                            <div className='h-[10%]' onClick={() => setEmojiPicker(false)}>
                                 <ChatBoxHeader />
                             </div>
-                            <div className='h-[calc(100vh-160px)] overflow-auto' ref={scrollableElementRef}>
+                            <div
+                                className='h-[calc(100vh-170px)] overflow-auto'
+                                ref={scrollableElementRef}
+                                onClick={() => setEmojiPicker(false)}
+                                onScroll={displayScrollToBottomButton}
+                            >
                                 <DisplayMessage />
                             </div>
                             <div className='h-[10%]'>
