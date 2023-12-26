@@ -1,7 +1,9 @@
 import Image from 'next/image'
 import { useEffect, useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { setSelectedItem } from '../slices/selectedItemSlice'
 import { setFriendProfileVisibility } from '../slices/friendProfileVisibilitySlice'
+import FriendProfile from './FriendProfile'
 import axios from 'axios'
 import EmojiPicker from 'emoji-picker-react'
 import Title from '../components/Title'
@@ -12,6 +14,9 @@ import io from 'socket.io-client'
 export default function Chatbox() {
     const dispatch = useDispatch()
     const selectedItem = useSelector((state) => state.selectedItem)
+    const screenWidth = useSelector((state) => state.deviceScreenWidth.width)
+    const friendProfileVisibility = useSelector((state) => state.friendProfileVisibility)
+    const [desktopScreen, setDesktopScreen] = useState(true)
     const [initState, setInitState] = useState(true)
     const [errorLabel, setErrorLabel] = useState("")
     const [newMessage, setNewMessage] = useState("")
@@ -19,7 +24,16 @@ export default function Chatbox() {
     const [messages, setMessages] = useState([])
     const [emojiPicker, setEmojiPicker] = useState(false)
     const [scrollButton, setScrollButton] = useState(false)
+    const [mobileFriendProfileVisibility, setMobileFriendProfileVisibility] = useState(false)
     const scrollableElementRef = useRef(null)
+
+    useEffect(() => {
+        if (!desktopScreen && screenWidth >= process.env.NEXT_PUBLIC_MOBILE_SCREEN_WIDTH) {
+            setDesktopScreen(true)
+        } else if (desktopScreen && screenWidth < process.env.NEXT_PUBLIC_MOBILE_SCREEN_WIDTH) {
+            setDesktopScreen(false)
+        }
+    }, [screenWidth])
 
     function createSocket() {
         const socketInfo = io.connect(process.env.NEXT_PUBLIC_DESTINATION, {
@@ -201,24 +215,53 @@ export default function Chatbox() {
 
 
     function ChatBoxHeader() {
-        return (
-            <div
-                className='flex flex-row px-[5%] py-[1%] bg-gray-700 text-slate-300 cursor-pointer'
-                onClick={() => dispatch(setFriendProfileVisibility({ isVisible: true }))}
-            >
-                <Image
-                    src={selectedItem.avatar ? `data:image/png;base64, ${selectedItem.avatar}` : '/userImage.png'}
-                    width={40}
-                    height={40}
-                    alt=''
-                    className='rounded-full bg-white  cursor-pointer'
-                    priority="high"
-                ></Image >
-                <div className='text-xl mx-[2%] my-auto'>
-                    <p>{selectedItem.username}</p>
+        if (screenWidth < process.env.NEXT_PUBLIC_MOBILE_SCREEN_WIDTH) {
+            return (
+                <div className='flex flex-row px-[2%] py-[2%] bg-gray-700 text-slate-300 cursor-pointer'>
+                    <p
+                        className='mr-[5%] text-slate-300 text-center text-4xl font-bold w-[10%] transition-transform transform hover:scale-110 focus:outline-none active:scale-100'
+                        onClick={() => dispatch(setSelectedItem({}))}
+                    >
+                        &larr;
+                    </p>
+                    <div
+                        className='flex'
+                        onClick={() => setMobileFriendProfileVisibility(true)}
+                    >
+                        <Image
+                            src={selectedItem.avatar ? `data:image/png;base64, ${selectedItem.avatar}` : '/userImage.png'}
+                            width={40}
+                            height={40}
+                            alt=''
+                            className='rounded-full bg-white  cursor-pointer'
+                            priority="high"
+                        ></Image >
+                        <div className='text-xl mx-[5%] my-auto'>
+                            <p>{selectedItem.username}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        )
+            )
+        } else {
+            return (
+                <div
+                    className='flex flex-row px-[5%] py-[1%] bg-gray-700 text-slate-300 cursor-pointer'
+                    onClick={() => dispatch(setFriendProfileVisibility({ isVisible: true }))}
+                >
+                    <Image
+                        src={selectedItem.avatar ? `data:image/png;base64, ${selectedItem.avatar}` : '/userImage.png'}
+                        width={40}
+                        height={40}
+                        alt=''
+                        className='rounded-full bg-white  cursor-pointer'
+                        priority="high"
+                    ></Image >
+                    <div className='text-xl mx-[5%] my-auto'>
+                        <p>{selectedItem.username}</p>
+                    </div>
+                </div>
+            )
+        }
     }
 
     function addEmoji(e) {
@@ -229,16 +272,23 @@ export default function Chatbox() {
     function InputBox() {
         return (
             <form className='relative flex bg-gray-800 ' onSubmit={(e) => postMessage(e)}>
-                <Image
-                    src={'/emoji_icon.png'}
-                    width={20}
-                    height={20}
-                    alt=''
-                    className='cursor-pointer bg-gray-900 rounded h-fit w-fit ml-[2%] mt-[0.5%] p-[0.6%]'
-                    priority="high"
-                    onClick={() => setEmojiPicker(prevValue => !prevValue)}
-                ></Image >
+
                 {
+                    desktopScreen
+                    &&
+                    <Image
+                        src={'/emoji_icon.png'}
+                        width={20}
+                        height={20}
+                        alt=''
+                        className='cursor-pointer bg-gray-900 rounded h-fit w-fit ml-[2%] mt-[0.5%] p-[0.6%] transition-transform transform hover:scale-110 focus:outline-none active:scale-100'
+                        priority="high"
+                        onClick={() => setEmojiPicker(prevValue => !prevValue)}
+                    ></Image >
+                }
+                {
+                    desktopScreen
+                    &&
                     emojiPicker
                     &&
                     <div className='absolute bottom-0'>
@@ -247,7 +297,7 @@ export default function Chatbox() {
                 }
                 <input
                     type='text'
-                    className='flex h-12 w-[80%] ml-[2%] mr-[5%] my-[0.5%] py-[0.4%] px-[1%] justify-self-end bg-gray-900 rounded outline-0 text-slate-300'
+                    className={desktopScreen ? 'flex h-12 w-[80%] ml-[2%] mr-[5%] my-[0.5%] py-[0.4%] px-[1%] justify-self-end bg-gray-900 rounded outline-0 text-slate-300' : 'flex h-12 w-[90%] ml-[5%] mr-[5%] my-[0.5%] py-[0.4%] px-[1%] justify-self-end bg-gray-900 rounded outline-0 text-slate-300'}
                     placeholder='Type a message'
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
@@ -262,7 +312,7 @@ export default function Chatbox() {
                         width={10}
                         height={10}
                         alt=''
-                        className='cursor-pointer bg-gray-900 rounded-full w-10 h-10 ml-[2%] mt-[0.5%] p-[0.6%]'
+                        className='cursor-pointer bg-gray-900 rounded-full w-8 h-8 mr-[2%] mt-[0.5%] p-[0.6%] transition-transform transform hover:scale-110 focus:outline-none active:scale-100'
                         priority="high"
                         onClick={scrollToBottom}
                     ></Image >
@@ -282,25 +332,36 @@ export default function Chatbox() {
                             <Title />
                         </div>
                     ) :
-                    (
-                        <div className='min-h-[calc(100vh-40px)]'>
-                            <div className='h-[10%]' onClick={() => setEmojiPicker(false)}>
-                                <ChatBoxHeader />
+                    mobileFriendProfileVisibility
+                        ?
+                        (
+                            < div className={mobileFriendProfileVisibility ? 'duration-300 ease-in transition-all' : 'absolute duration-300 ease-out transition-all right-0 top-0 translate-x-full z-0 opacity-0'}>
+                                <FriendProfile
+                                    selectedItem={selectedItem}
+                                    mobileFriendProfileVisibility={mobileFriendProfileVisibility}
+                                    setMobileFriendProfileVisibility={setMobileFriendProfileVisibility}
+                                />
                             </div>
-                            <div
-                                className='h-[calc(100vh-170px)] overflow-auto'
-                                ref={scrollableElementRef}
-                                onClick={() => setEmojiPicker(false)}
-                                onScroll={displayScrollToBottomButton}
-                            >
-                                <DisplayMessage />
-                            </div>
-                            <div className='h-[10%]'>
-                                <InputBox />
-                            </div>
-                        </div>
-
-                    )
+                        )
+                        :
+                        (
+                            <div className={'min-h-[calc(100vh-40px)]' && !mobileFriendProfileVisibility ? 'duration-300 ease-in transition-all' : 'absolute duration-300 ease-out transition-all right-0 top-0 translate-x-full z-0 opacity-0'}>
+                                <div className='h-[10%]' onClick={() => setEmojiPicker(false)}>
+                                    <ChatBoxHeader />
+                                </div>
+                                <div
+                                    className={desktopScreen ? 'h-[calc(100vh-170px)] overflow-auto' : 'h-[calc(100vh-120px)] overflow-auto'}
+                                    ref={scrollableElementRef}
+                                    onClick={() => setEmojiPicker(false)}
+                                    onScroll={displayScrollToBottomButton}
+                                >
+                                    <DisplayMessage />
+                                </div>
+                                <div className='h-[10%]'>
+                                    <InputBox />
+                                </div>
+                            </div >
+                        )
             }
         </>
     )

@@ -1,7 +1,4 @@
 import Image from 'next/image'
-import { useSelector } from 'react-redux'
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import { setFriendProfileVisibility } from '../slices/friendProfileVisibilitySlice'
 
@@ -26,7 +23,7 @@ export default function Profile(props) {
         <div>
             <p
                 className='text-slate-300 text-center text-4xl ml-[2%] font-bold w-[10%] cursor-pointer transition-transform transform hover:scale-110 focus:outline-none active:scale-100'
-                onClick={() => dispatch(setFriendProfileVisibility({ isVisible: false }))}
+                onClick={() => props.mobileFriendProfileVisibility ? props.setMobileFriendProfileVisibility(false) : dispatch(setFriendProfileVisibility({ isVisible: false }))}
             >
                 &larr;
             </p>

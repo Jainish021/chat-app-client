@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react'
 import axios from "axios"
 import { setUserInformation } from '../slices/userInformationSlice'
+import { setDeviceScreenWidth } from '../slices/deviceScreenWidthSlice'
 import Loading from "../components/Loading"
 import Sidebar from '../components/Sidebar'
 import Chatbox from '../components/Chatbox'
@@ -13,8 +14,10 @@ export default function Chat() {
     const router = useRouter()
     const dispatch = useDispatch()
     const userInformation = useSelector((state) => state.userInformation)
+    const selectedItem = useSelector((state) => state.selectedItem)
     const [userInfo, setUserInfo] = useState(userInformation)
     const [isLoading, setIsLoading] = useState(true)
+    const [screenWidth, setScreenWidth] = useState(0)
 
     useEffect(() => {
         const token = localStorage.getItem('token')
@@ -40,16 +43,30 @@ export default function Chat() {
 
         token && !userInfo?._id && fetchUserDetails()
         setIsLoading(false)
+        setScreenWidth(window.innerWidth)
+        dispatch(setDeviceScreenWidth({ width: window.innerWidth }))
         // eslint-disable-next-line
     }, [])
 
-    return (
-        <>
-            {isLoading
-                ?
-                (<Loading />)
-                :
-                (
+    useEffect(() => {
+        function handleResize() {
+            setScreenWidth(window.innerWidth)
+            dispatch(setDeviceScreenWidth({ width: window.innerWidth }))
+        }
+
+        window.addEventListener('resize', handleResize)
+
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+    function HomePage() {
+        if (isLoading) {
+            return (
+                <Loading />
+            )
+        } else {
+            if (screenWidth >= process.env.NEXT_PUBLIC_MOBILE_SCREEN_WIDTH) {
+                return (
                     <>
                         <HeadComponent />
                         <section className='bg-gray-900 overflow-auto min-h-screen'>
@@ -62,8 +79,35 @@ export default function Chat() {
                                 </div>
                             </div>
                         </section>
-                    </>)
+                    </>
+                )
+            } else {
+                if (selectedItem?._id) {
+                    return (
+                        <>
+                            <HeadComponent />
+                            <div className='min-w-screen bg-gray-800 min-h-screen'>
+                                <Chatbox />
+                            </div>
+                        </>
+                    )
+                } else {
+                    return (
+                        <>
+                            <HeadComponent />
+                            <div className='bg-gray-900 overflow-clip'>
+                                <div className='min-w-screen bg-gray-700 min-h-screen'>
+                                    <Sidebar />
+                                </div>
+                            </div>
+                        </>
+                    )
+                }
             }
-        </>
+        }
+    }
+
+    return (
+        <HomePage />
     )
 }

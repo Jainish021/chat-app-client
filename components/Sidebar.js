@@ -13,6 +13,7 @@ export default function Sidebar() {
     const router = useRouter()
     const dispatch = useDispatch()
     const selectedItem = useSelector((state) => state.selectedItem)
+    const screenWidth = useSelector((state) => state.deviceScreenWidth.width)
     const friendProfileVisibility = useSelector((state) => state.friendProfileVisibility)
     const [friendSearchVisibility, setFriendSearchVisibility] = useState(false)
     const [profileVisibility, setProfileVisibility] = useState(false)
@@ -117,11 +118,16 @@ export default function Sidebar() {
                     profile={profile}
                 />
             </div>
-            <div className={friendProfileVisibility.isVisible ? 'duration-300 ease-in transition-all' : 'absolute duration-300 ease-out transition-all right-0 top-0 translate-x-full z-0 opacity-0'}>
-                <FriendProfile
-                    selectedItem={selectedItem}
-                />
-            </div>
-        </div>
+
+            {
+                screenWidth >= process.env.NEXT_PUBLIC_MOBILE_SCREEN_WIDTH
+                &&
+                < div className={friendProfileVisibility.isVisible ? 'duration-300 ease-in transition-all' : 'absolute duration-300 ease-out transition-all right-0 top-0 translate-x-full z-0 opacity-0'}>
+                    <FriendProfile
+                        selectedItem={selectedItem}
+                    />
+                </div>
+            }
+        </div >
     )
 }
